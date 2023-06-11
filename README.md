@@ -1,3 +1,18 @@
+# slk-phonegap-nfc
+This plugin is based off [https://github.com/apache/cordova-plugin-file-transfer](https://github.com/chariotsolutions/phonegap-nfc), with PR 477 and PR 483 applied for compatibility with Android SDK 31+ and iOS 16.
+
+This is required to support the migration to Cordova 12 and newer Android and iOS APIs.
+
+In order to upgrade this plugin:
+
+- First, check whether the pull request has been merged into the main plugin. If so, this plugin is no longer required, as long as you upgrade to a version that contains the pull request changes.
+- Pull the changes from the new version (download from the release tag, NOT master.)
+- Commit these changes into the cordova-plugin-slk-camera on the master branch
+- Create a new x.x.x-PR477-and-PR483 branch based off of master (replacing x.x.x with the version, e.g. 2.0.0-with-PR-814)
+- Include the plugin in your Liberty Link cordova build
+
+
+
 PhoneGap NFC Plugin
 ==========================
 
