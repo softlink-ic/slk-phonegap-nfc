@@ -1,5 +1,5 @@
 # slk-phonegap-nfc
-This plugin is based off [https://github.com/apache/cordova-plugin-file-transfer](https://github.com/chariotsolutions/phonegap-nfc)](https://github.com/chariotsolutions/phonegap-nfc), with PR 477 and PR 483 applied for compatibility with Android SDK 31+ and iOS 16.
+This plugin is based off [https://github.com/chariotsolutions/phonegap-nfc](https://github.com/chariotsolutions/phonegap-nfc), with PR 477 and PR 483 applied for compatibility with Android SDK 31+ and iOS 16.
 
 This is required to support the migration to Cordova 12 and newer Android and iOS APIs.
 
