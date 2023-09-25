@@ -21,6 +21,7 @@
 @property (nonatomic, assign) BOOL keepSessionOpen;
 @property (strong, nonatomic) NFCReaderSession *nfcSession API_AVAILABLE(ios(11.0));
 @property (strong, nonatomic) NFCNDEFMessage *messageToWrite API_AVAILABLE(ios(11.0));
+@property (strong, nonatomic) NFCTagTypeISO15693 *nfcvTag API_AVAILABLE(ios(11.0));
 @end
 
 @implementation NfcPlugin
@@ -282,7 +283,11 @@
             return;
         }
 
-        [self processNDEFTag:session tag:ndefTag metaData:tagMetaData];
+        if (tag.type == NFCTagTypeISO15693) {
+            [self processNFCVTag:session tag:tag metaData:tagMetaData]
+        } else {
+            [self processNDEFTag:session tag:ndefTag metaData:tagMetaData];
+        }
     }];
 }
 
@@ -422,6 +427,39 @@
     }
 }
 
+#pragma mark - NFCV Tag Reading
+
+- (NSArray *)processNFCVTag:(NFCTagReaderSession *)session tag:(id<NFCTAG> *)tag metaData:(NSMutableDictionary * _Nonnull)metaData  API_AVAILABLE(ios(13.0)) {
+
+    [tag getSystemInfoWithRequestFlag:(RequestFlagHighDataRate) completionHandler:^(NSInteger dsfid, NSInteger afi, NSInteger blockSize, NSInteger blockCount, NSInteger icReference, NSError * _Nullable error) {
+        if(!error) {
+            /// This prints "DSFId: 0, AFI: 0, Block size: 4, Block count: 28, IC Reference: 1"
+            NSLog(@"DSFId: %ld, AFI: %ld, Block size: %ld, Block count: %ld, IC Reference: %ld", (long)dsfid, afi,blockSize, blockCount, icReference);
+            // read all the blocks
+            NSRange blockRange = NSMakeRange(0, blockCount);
+
+            [tag readMultipleBlocksWithRequestFlags:RequestFlagHighDataRate blockRange:blockRange completionHandler:^(NSArray * _Nonnull dataBlocks, NSError * _Nullable error) {
+                NSMutableData *response = [NSMutableData data];
+
+                for(NSData *blockData in dataBlocks) {
+                    [response appendData:blockData];
+                }
+
+                if(response.length > 0) {
+                    NSData *rawData = [response subdataWithRange:NSMakeRange(1, (response.length - 1))];
+
+                    /// Prints Received data: {length = 111, bytes = 0x00000000 00000000 00000000 00000000 ... 00000000 00000000 }
+                    NSLog(@"Received data: %@", rawData);
+
+                    // parse the raw byte data to an array
+                    metaData[@"payload"] = [self uint8ArrayFromNSData:rawData bytes];
+                }
+            }];
+            // pass the payload to the fireNdefEvent which is passed to the JavaScript side
+            [self fireTagEvent:metaData];
+        }
+    }];
+}
 #pragma mark - Tag Reader Helper Functions
 
 // Gets the tag meta data - type and uid
