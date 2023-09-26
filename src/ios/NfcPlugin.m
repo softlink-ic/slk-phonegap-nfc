@@ -595,6 +595,12 @@
         [dictionary setDictionary:metaData];
     }
 
+    // save the NFC payload (separate to Ndef Record)
+    NSArray *nfcPayload = [dictionary objectForKey:@"payload"];
+    if (payload) {
+        dictionary[@"payload"] = payload;
+    }
+
     // convert uid from NSData to a uint8_t array
     NSData *uid = [dictionary objectForKey:@"id"];
     if (uid) {
