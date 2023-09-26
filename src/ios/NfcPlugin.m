@@ -452,7 +452,7 @@
                     NSLog(@"Received data: %@", rawData);
 
                     // parse the raw byte data to an array
-                    metaData[@"payload"] = [self uint8ArrayFromNSData:rawData bytes];
+                    metaData[@"payload"] = [self uint8ArrayFromNSData:rawData];
                 }
             }];
             // pass the payload to the fireNdefEvent function which is passed to the JavaScript side as part of the NfcEvent.tag object
