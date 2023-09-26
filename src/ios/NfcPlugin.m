@@ -21,7 +21,6 @@
 @property (nonatomic, assign) BOOL keepSessionOpen;
 @property (strong, nonatomic) NFCReaderSession *nfcSession API_AVAILABLE(ios(11.0));
 @property (strong, nonatomic) NFCNDEFMessage *messageToWrite API_AVAILABLE(ios(11.0));
-@property (strong, nonatomic) NFCTagTypeISO15693 *nfcvTag API_AVAILABLE(ios(11.0));
 @end
 
 @implementation NfcPlugin
