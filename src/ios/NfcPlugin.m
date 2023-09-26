@@ -455,11 +455,18 @@
                     metaData[@"payload"] = [self uint8ArrayFromNSData:rawData bytes];
                 }
             }];
-            // pass the payload to the fireNdefEvent which is passed to the JavaScript side
+            // pass the payload to the fireNdefEvent function which is passed to the JavaScript side as part of the NfcEvent.tag object
+            session.alertMessage = @"Tag successfully read.";
             [self fireTagEvent:metaData];
+            [self closeSession:session];
+        } else {
+            NSLog(@"%@", error);
+            [self closeSession:session withError:@"Read Failed."];
+            return;
         }
     }];
 }
+
 #pragma mark - Tag Reader Helper Functions
 
 // Gets the tag meta data - type and uid
