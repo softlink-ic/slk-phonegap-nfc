@@ -284,7 +284,7 @@
         }
 
         if (tag.type == NFCTagTypeISO15693) {
-            [self processNFCVTag:session tag:tag metaData:tagMetaData]
+            [self processNFCVTag:session tag:tag metaData:tagMetaData];
         } else {
             [self processNDEFTag:session tag:ndefTag metaData:tagMetaData];
         }
