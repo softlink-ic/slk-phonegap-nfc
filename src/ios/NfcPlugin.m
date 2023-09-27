@@ -284,7 +284,7 @@
         }
 
         if (tag.type == NFCTagTypeISO15693) {
-            [self processNFCVTag:session tag:tag metaData:tagMetaData];
+            [self processNFCVTag:session tag:nfcTag metaData:tagMetaData];
         } else {
             [self processNDEFTag:session tag:ndefTag metaData:tagMetaData];
         }
@@ -446,19 +446,19 @@
                 }
 
                 if(response.length > 0) {
-                    NSData *rawData = [response subdataWithRange:NSMakeRange(1, (response.length - 1))];
+                    NSData *rawData = [response subdataWithRange:NSMakeRange(0, (response.length - 1))];
 
                     /// Prints Received data: {length = 111, bytes = 0x00000000 00000000 00000000 00000000 ... 00000000 00000000 }
                     NSLog(@"Received data: %@", rawData);
 
                     // parse the raw byte data to an array
-                    metaData[@"payload"] = [self uint8ArrayFromNSData:rawData];
+                    metaData[@"nfcPayload"] = rawData;
                 }
-            }];
             // pass the payload to the fireNdefEvent function which is passed to the JavaScript side as part of the NfcEvent.tag object
             session.alertMessage = @"Tag successfully read.";
             [self fireTagEvent:metaData];
             [self closeSession:session];
+            }];
         } else {
             NSLog(@"%@", error);
             [self closeSession:session withError:@"Read Failed."];
@@ -603,9 +603,9 @@
     }
 
     // save the NFC payload (separate to Ndef Record)
-    NSArray *nfcPayload = [dictionary objectForKey:@"payload"];
+    NSData *nfcPayload = [dictionary objectForKey:@"nfcPayload"];
     if (nfcPayload) {
-        dictionary[@"payload"] = nfcPayload;
+        dictionary[@"nfcPayload"] = [self uint8ArrayFromNSData:nfcPayload];
     }
 
     // convert uid from NSData to a uint8_t array
