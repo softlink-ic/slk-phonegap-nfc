@@ -274,6 +274,7 @@
     id<NFCTag> tag = [tags firstObject];
     NSMutableDictionary *tagMetaData = [self getTagInfo:tag];
     id<NFCNDEFTag> ndefTag = (id<NFCNDEFTag>)tag;
+    id<NFCISO15693Tag> nfcTag = (id<NFCISO15693Tag>)tag;
     
     [session connectToTag:tag completionHandler:^(NSError * _Nullable error) {
         if (error) {
@@ -428,7 +429,7 @@
 
 #pragma mark - NFCV Tag Reading
 
-- (NSArray *)processNFCVTag:(NFCTagReaderSession *)session tag:(id<NFCTAG> *)tag metaData:(NSMutableDictionary * _Nonnull)metaData  API_AVAILABLE(ios(13.0)) {
+- (NSArray *)processNFCVTag:(NFCTagReaderSession *)session tag:(id<NFCISO15693Tag>)tag metaData:(NSMutableDictionary * _Nonnull)metaData  API_AVAILABLE(ios(13.0)) {
 
     [tag getSystemInfoWithRequestFlag:(RequestFlagHighDataRate) completionHandler:^(NSInteger dsfid, NSInteger afi, NSInteger blockSize, NSInteger blockCount, NSInteger icReference, NSError * _Nullable error) {
         if(!error) {
@@ -603,8 +604,8 @@
 
     // save the NFC payload (separate to Ndef Record)
     NSArray *nfcPayload = [dictionary objectForKey:@"payload"];
-    if (payload) {
-        dictionary[@"payload"] = payload;
+    if (nfcPayload) {
+        dictionary[@"payload"] = nfcPayload;
     }
 
     // convert uid from NSData to a uint8_t array
