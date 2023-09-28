@@ -429,7 +429,7 @@
 
 #pragma mark - NFCV Tag Reading
 
-- (NSArray *)processNFCVTag:(NFCTagReaderSession *)session tag:(id<NFCISO15693Tag>)tag metaData:(NSMutableDictionary * _Nonnull)metaData  API_AVAILABLE(ios(13.0)) {
+- (void) processNFCVTag:(NFCTagReaderSession *)session tag:(id<NFCISO15693Tag>)tag metaData:(NSMutableDictionary * _Nonnull)metaData  API_AVAILABLE(ios(13.0)) {
 
     [tag getSystemInfoWithRequestFlag:(RequestFlagHighDataRate) completionHandler:^(NSInteger dsfid, NSInteger afi, NSInteger blockSize, NSInteger blockCount, NSInteger icReference, NSError * _Nullable error) {
         if(!error) {
