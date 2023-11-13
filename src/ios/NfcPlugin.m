@@ -433,7 +433,7 @@
 
     [tag getSystemInfoWithRequestFlag:(RequestFlagHighDataRate) completionHandler:^(NSInteger dsfid, NSInteger afi, NSInteger blockSize, NSInteger blockCount, NSInteger icReference, NSError * _Nullable error) {
         if(!error) {
-            /// This prints "DSFId: 0, AFI: 0, Block size: 4, Block count: 28, IC Reference: 1"
+            // For ISO15693 tags, this prints "DSFId: 0, AFI: 0, Block size: 4, Block count: 28, IC Reference: 1"
             NSLog(@"DSFId: %ld, AFI: %ld, Block size: %ld, Block count: %ld, IC Reference: %ld", (long)dsfid, afi,blockSize, blockCount, icReference);
             // read all the blocks
             NSRange blockRange = NSMakeRange(0, blockCount);
@@ -448,7 +448,7 @@
                 if(response.length > 0) {
                     NSData *rawData = [response subdataWithRange:NSMakeRange(0, (response.length - 1))];
 
-                    /// Prints Received data: {length = 111, bytes = 0x00000000 00000000 00000000 00000000 ... 00000000 00000000 }
+                    // Prints Received data: {length = 111, bytes = 0x00000000 00000000 00000000 00000000 ... 00000000 00000000 }
                     NSLog(@"Received data: %@", rawData);
 
                     // parse the raw byte data to an array
